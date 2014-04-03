@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Generated files" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/octopus.js" />
+        <item url="file://$PROJECT_DIR$/test/service/test_service.js" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/octopus.js" />
+      <root url="file://$PROJECT_DIR$/test/service/test_service.js" />
+    </CLASSES>
+    <SOURCES />
+  </library>
+</component>
