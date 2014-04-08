@@ -76,6 +76,7 @@ export class CDBusInterface {
     call(aName: string, ...aArgs: any[]) {
         var callback = aArgs.pop();
         this.onResponse(callback);
+        this._dbusMsg.clearArgs();
         aArgs.forEach((arg) => {
             if (typeof arg == 'string') {
                 this._dbusMsg.appendArgs('s', arg);
@@ -83,7 +84,6 @@ export class CDBusInterface {
                 this._dbusMsg.appendArgs('i', arg);
             }
         });
-        this._dbusMsg.clearArgs();
         this._dbusMsg.member = aName;
         this._dbusMsg.send();
     }
@@ -156,13 +156,21 @@ export interface TChannelLogoInfo {
 
 }
 
+export function compare_service(aA: TService, aB: TService): boolean {
+    if (aA.uid != aB.uid) {
+        return false;
+    }
+    return true;
+}
+
 export class CMetaService extends CDBusInterface {
     constructor() {
         super('Octopus.Appkit.Meta.Service', '/Octopus/Appkit/Meta/Service');
-
     }
     GetService(aUid: number, aCb: (service: TService) => void) {
-        this.call('GetService', aUid, aCb);
+        this.call('GetService', aUid, (data: any) => {
+            aCb(convert_service(data));
+        });
     }
     GetNetwork(aUid: number, aCb: (networkInfo: TNetworkInfo) => void) {
     }

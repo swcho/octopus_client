@@ -80,6 +80,7 @@ var CDBusInterface = (function () {
         var _this = this;
         var callback = aArgs.pop();
         this.onResponse(callback);
+        this._dbusMsg.clearArgs();
         aArgs.forEach(function (arg) {
             if (typeof arg == 'string') {
                 _this._dbusMsg.appendArgs('s', arg);
@@ -87,7 +88,6 @@ var CDBusInterface = (function () {
                 _this._dbusMsg.appendArgs('i', arg);
             }
         });
-        this._dbusMsg.clearArgs();
         this._dbusMsg.member = aName;
         this._dbusMsg.send();
     };
@@ -114,13 +114,23 @@ function convert_service(aDBusData) {
     return ret;
 }
 
+function compare_service(aA, aB) {
+    if (aA.uid != aB.uid) {
+        return false;
+    }
+    return true;
+}
+exports.compare_service = compare_service;
+
 var CMetaService = (function (_super) {
     __extends(CMetaService, _super);
     function CMetaService() {
         _super.call(this, 'Octopus.Appkit.Meta.Service', '/Octopus/Appkit/Meta/Service');
     }
     CMetaService.prototype.GetService = function (aUid, aCb) {
-        this.call('GetService', aUid, aCb);
+        this.call('GetService', aUid, function (data) {
+            aCb(convert_service(data));
+        });
     };
     CMetaService.prototype.GetNetwork = function (aUid, aCb) {
     };
