@@ -3,112 +3,155 @@
  */
 
 /// <reference path="def/node.d.ts" />
-/// <reference path="def/dbus.d.ts" />
 
 var dbus = require('node-dbus');
 
-var dbusMsg = Object.create(dbus.DBusMessage, {
-    address: {
-        value: 'tcp:host=192.168.0.2,port=55884'
-    },
-    destination: {
-        value: 'Octopus.Appkit.Meta.Service'
-    },
-    path: {
-        value: '/Octopus/Appkit/Meta/Service'
-    },
-    iface: {
-        value: 'Octopus.Appkit.Meta.Service'
-    },
-    member: {
-        value: 'GetServiceList',
-        //value: 'Properties',
-        writable: true
-    },
-    bus: {
-        value: dbus.DBUS_BUS_SESSION
-    },
-    type: {
-        value: dbus.DBUS_MESSAGE_TYPE_METHOD_CALL, // dbus.DBUS_MESSAGE_TYPE_METHOD_RETURN,
-        writable: true
-    }
-});
-
-dbusMsg.on ("methodResponse", function (arg) {
-    console.log ("[PASSED] Got method response with data ::");
-    console.log (arguments);
-    arguments[0].forEach(function (s, i) {
-        console.log('');
-        console.log(i);
-        console.log(s);
-    });
-});
-
-dbusMsg.on ("error", function (error) {
-    console.log ("[FAILED] ERROR -- ");
-    console.log(error);
-});
-
+var sAddress = 'tcp:host=192.168.0.2,port=55884'
 /*
- reval._1._1				=	(int32_t)pstService->uid;
- reval._1._2				=	std::string(pstService->typeOf);
- reval._1._3				=	(int32_t)pstService->version;
- reval._1._4				=	(int32_t)pstService->tsuid;
- reval._1._5				=	(int32_t)pstService->prvuid;
- reval._1._6				=	(int32_t)pstService->antuid;
- reval._1._7				=	(int32_t)pstService->grpuids[0];	//	!!!!!!!!!!!!!!!!!! 나머지 포함 확인 !!!!!
- reval._1._8				=	(int32_t)pstService->bqtuids[0];	//	!!!!!!!!!!!!!!!!!! 나머지 포함 확인 !!!!!
+ reval._1 		=	(int32_t)pstSrc->uid;
+ reval._2 		=	(int32_t)pstSrc->tsuid;
+ reval._3 		=	(int32_t)pstSrc->prvuid;
+ reval._4 		=	(int32_t)pstSrc->antuid;
 
- reval._2._1				=	(int32_t)pstService->svcid;
- reval._2._2				=	(int32_t)pstService->tsid;
- reval._2._3				=	(int32_t)pstService->onid;
+ reval._5 		=	(int32_t)pstSrc->svcid;
+ reval._6 		=	(int32_t)pstSrc->tsid;
+ reval._7 		=	(int32_t)pstSrc->onid;
 
- reval._3._1				=	(int32_t)pstService->lcn;
+ reval._8 		=	(int32_t)pstSrc->lcn;
 
- reval._4._1				=	std::string(pstService->name);
- reval._4._2				=	(uint32_t)pstService->svcType;
- reval._4._3				=	(uint32_t)pstService->orgSvcType;
- reval._4._4				=	(int32_t)pstService->optype;
- reval._4._5				=	(uint32_t)pstService->deliType;
- reval._4._6				=	std::string(pstService->satType);
- reval._4._7				=	(bool)pstService->visibleFlag;
- reval._4._8				=	(bool)pstService->locked;
- reval._4._9				=	(bool)pstService->removed;
- reval._4._10			=	(bool)pstService->renamed;
+ reval._9 		=	(uint32_t)pstSrc->svcType;
+ reval._10 		=	(uint32_t)pstSrc->deliType;
+ reval._11 		=	(uint32_t)pstSrc->casType;
 
- reval._5._1				=	(int32_t)pstService->pmtPid;
- reval._5._2				=	(int32_t)pstService->pcrPid;
- reval._5._3				=	(int32_t)pstService->videoPid;
- reval._5._4				=	(int32_t)pstService->audioPid;
- reval._5._5				=	(int32_t)pstService->ttxPid;
- reval._5._6				=	(int32_t)pstService->audioAuxPid;
- reval._5._7				=	(int32_t)pstService->dolbyPid;
+ reval._12 		=	std::string(pstSrc->name);
+ reval._13 		=	std::string(pstSrc->satType);
+*/
 
- reval._6._1				=	(uint32_t)pstService->highDefinition;
- reval._6._2				=	(uint32_t)pstService->casType;
- reval._6._3				=	(bool)pstService->dolbyFlag;
- reval._6._4				=	(uint32_t)pstService->videoCodec;
- reval._6._5				=	(uint32_t)pstService->audioCodec;
- reval._6._6				=	(uint32_t)pstService->audioAuxCodec;
- reval._6._7				=	(uint32_t)pstService->dolbyCodec;
- reval._6._8				=	(bool)pstService->lcnFlag;
- reval._6._9				=	(uint32_t)pstService->svcSection;
- */
-interface TService {
-    uid: number;
-    typeOf: string;
+class CDBusInterface {
+    private _dbusMsg;
+    private _onResponse: Function;
+    constructor(aDestination: string, aPath: string) {
+        var dbusMsg = Object.create(dbus.DBusMessage, {
+            address: {
+                value: sAddress
+            },
+            destination: {
+                value: aDestination
+            },
+            path: {
+                value: aPath
+            },
+            iface: {
+                value: aDestination
+            },
+            member: {
+                value: 'GetServiceList',
+                //value: 'Properties',
+                writable: true
+            },
+            bus: {
+                value: dbus.DBUS_BUS_SESSION
+            },
+            type: {
+                value: dbus.DBUS_MESSAGE_TYPE_METHOD_CALL, // dbus.DBUS_MESSAGE_TYPE_METHOD_RETURN,
+                writable: true
+            }
+        });
+        dbusMsg.on ("methodResponse", (data) => {
+            if (this._onResponse) {
+                this._onResponse(data);
+            }
+        });
+
+        dbusMsg.on ("error", function (error) {
+            console.log ("[FAILED] ERROR -- ");
+            console.log(error);
+        });
+
+        this._dbusMsg = dbusMsg;
+    }
+    onResponse(aCb: (aData: any) => void) {
+        this._onResponse = aCb;
+    }
+    call(aName: string, ...aArgs: any[]) {
+        var callback = aArgs.pop();
+        this.onResponse(callback);
+        aArgs.forEach((arg) => {
+            if (typeof arg == 'string') {
+                this._dbusMsg.appendArgs('s', arg);
+            } else {
+                this._dbusMsg.appendArgs('i', arg);
+            }
+        });
+        this._dbusMsg.clearArgs();
+        this._dbusMsg.member = aName;
+        this._dbusMsg.send();
+    }
 }
 
-class CMetaService {
+interface TService {
+    uid: number;
+    tsuid: number;
+    prvuid: number;
+    antuid: number;
+
+    svcid: number;
+    tsid: number;
+    onid: number;
+
+    lcn: number;
+
+    svcType: number;
+    deliType: number;
+    casType: number;
+
+    name: string;
+    satType: string;
+}
+
+function convert_service(aDBusData: any): TService {
+    var ret: TService = {
+        uid: aDBusData[0],
+        tsuid: aDBusData[1],
+        prvuid: aDBusData[2],
+        antuid: aDBusData[3],
+
+        svcid: aDBusData[4],
+        tsid: aDBusData[5],
+        onid: aDBusData[6],
+
+        lcn: aDBusData[7],
+
+        svcType: aDBusData[8],
+        deliType: aDBusData[9],
+        casType: aDBusData[10],
+
+        name: aDBusData[11],
+        satType: aDBusData[12]
+    }
+    return ret;
+}
+
+class CMetaService extends CDBusInterface {
     constructor() {
+        super('Octopus.Appkit.Meta.Service', '/Octopus/Appkit/Meta/Service');
 
     }
-    GetServiceList() {
-        dbusMsg.clearArgs();
-        dbusMsg.member = 'GetServiceList';
-        dbusMsg.send();
+    GetService(aUid: number, aCb: (data: any) => void) {
+        this.call('GetService', aUid, aCb);
+    }
+    GetServiceList(aCb: (serviceList: TService[]) => void) {
+        this.call('GetServiceList', (data) => {
+            var serviceList = [];
+            data.forEach((s) => {
+                serviceList.push(convert_service(s));
+            });
+            aCb(serviceList);
+        });
     }
 }
 
 var metaSvc = new CMetaService();
-metaSvc.GetServiceList();
+metaSvc.GetServiceList((serviceList: TService[]) => {
+    console.log(serviceList);
+});
