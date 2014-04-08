@@ -12,21 +12,46 @@ var dbus = require('node-dbus');
 
 var sAddress = 'tcp:host=192.168.0.2,port=55884';
 
-/*
-reval._1 		=	(int32_t)pstSrc->uid;
-reval._2 		=	(int32_t)pstSrc->tsuid;
-reval._3 		=	(int32_t)pstSrc->prvuid;
-reval._4 		=	(int32_t)pstSrc->antuid;
-reval._5 		=	(int32_t)pstSrc->svcid;
-reval._6 		=	(int32_t)pstSrc->tsid;
-reval._7 		=	(int32_t)pstSrc->onid;
-reval._8 		=	(int32_t)pstSrc->lcn;
-reval._9 		=	(uint32_t)pstSrc->svcType;
-reval._10 		=	(uint32_t)pstSrc->deliType;
-reval._11 		=	(uint32_t)pstSrc->casType;
-reval._12 		=	std::string(pstSrc->name);
-reval._13 		=	std::string(pstSrc->satType);
-*/
+
+function convert_service(aDBusData) {
+    var ret = {
+        uid: aDBusData[0],
+        tsuid: aDBusData[1],
+        prvuid: aDBusData[2],
+        antuid: aDBusData[3],
+        svcid: aDBusData[4],
+        tsid: aDBusData[5],
+        onid: aDBusData[6],
+        lcn: aDBusData[7],
+        svcType: aDBusData[8],
+        deliType: aDBusData[9],
+        casType: aDBusData[10],
+        name: aDBusData[11],
+        satType: aDBusData[12]
+    };
+    return ret;
+}
+
+function convert_network(aDBusData) {
+    var ret = {
+        uid: aDBusData[0],
+        typeOf: aDBusData[1],
+        version: aDBusData[2],
+        onid: aDBusData[3],
+        name: aDBusData[4],
+        deliType: aDBusData[5]
+    };
+    return ret;
+}
+
+function compare_service(aA, aB) {
+    if (aA.uid != aB.uid) {
+        return false;
+    }
+    return true;
+}
+exports.compare_service = compare_service;
+
 var CDBusInterface = (function () {
     function CDBusInterface(aDestination, aPath) {
         var _this = this;
@@ -94,33 +119,6 @@ var CDBusInterface = (function () {
     return CDBusInterface;
 })();
 exports.CDBusInterface = CDBusInterface;
-
-function convert_service(aDBusData) {
-    var ret = {
-        uid: aDBusData[0],
-        tsuid: aDBusData[1],
-        prvuid: aDBusData[2],
-        antuid: aDBusData[3],
-        svcid: aDBusData[4],
-        tsid: aDBusData[5],
-        onid: aDBusData[6],
-        lcn: aDBusData[7],
-        svcType: aDBusData[8],
-        deliType: aDBusData[9],
-        casType: aDBusData[10],
-        name: aDBusData[11],
-        satType: aDBusData[12]
-    };
-    return ret;
-}
-
-function compare_service(aA, aB) {
-    if (aA.uid != aB.uid) {
-        return false;
-    }
-    return true;
-}
-exports.compare_service = compare_service;
 
 var CMetaService = (function (_super) {
     __extends(CMetaService, _super);
