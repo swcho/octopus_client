@@ -27,7 +27,7 @@ var sAddress = 'tcp:host=192.168.0.2,port=55884'
  reval._13 		=	std::string(pstSrc->satType);
 */
 
-class CDBusInterface {
+export class CDBusInterface {
     private _dbusMsg;
     private _onResponse: Function;
     constructor(aDestination: string, aPath: string) {
@@ -89,26 +89,6 @@ class CDBusInterface {
     }
 }
 
-interface TService {
-    uid: number;
-    tsuid: number;
-    prvuid: number;
-    antuid: number;
-
-    svcid: number;
-    tsid: number;
-    onid: number;
-
-    lcn: number;
-
-    svcType: number;
-    deliType: number;
-    casType: number;
-
-    name: string;
-    satType: string;
-}
-
 function convert_service(aDBusData: any): TService {
     var ret: TService = {
         uid: aDBusData[0],
@@ -132,13 +112,83 @@ function convert_service(aDBusData: any): TService {
     return ret;
 }
 
-class CMetaService extends CDBusInterface {
+export interface TService {
+    uid: number;
+    tsuid: number;
+    prvuid: number;
+    antuid: number;
+
+    svcid: number;
+    tsid: number;
+    onid: number;
+
+    lcn: number;
+
+    svcType: number;
+    deliType: number;
+    casType: number;
+
+    name: string;
+    satType: string;
+}
+
+export interface TNetworkInfo {
+
+}
+
+export interface TTransponderInfo {
+
+}
+
+export interface TProviderInfo {
+
+}
+
+export interface TGroupInfo  {
+
+}
+
+export interface TBouquetInfo {
+
+}
+
+export interface TChannelLogoInfo {
+
+}
+
+export class CMetaService extends CDBusInterface {
     constructor() {
         super('Octopus.Appkit.Meta.Service', '/Octopus/Appkit/Meta/Service');
 
     }
-    GetService(aUid: number, aCb: (data: any) => void) {
+    GetService(aUid: number, aCb: (service: TService) => void) {
         this.call('GetService', aUid, aCb);
+    }
+    GetNetwork(aUid: number, aCb: (networkInfo: TNetworkInfo) => void) {
+    }
+    GetTransponder(aUid: number, aCb: (transponderInfo: TTransponderInfo) => void) {
+
+    }
+    GetProvider(aUid: number, aCb: (providerInfo: TProviderInfo) => void) {
+
+    }
+    GetGroup(aUid: number, aCb: (groupInfo: TGroupInfo) => void) {
+
+    }
+    GetBouquet(aUid: number, aCb: (bouquetInfo: TBouquetInfo) => void) {
+
+    }
+    GetLogoUrl(aUid: number, aBufChannelLogoInfo: any, aCb: (channelLogoInfo: TChannelLogoInfo) => void) {
+
+    }
+    GetServiceTriplet(aUid: number, aTsid: number, aOnid: number, aSid: number, aCb: (triplet: any) => void) {
+
+    }
+    FindServiceByTriplet(aOnId: number, aTsId: number, aSvcid: number, aCb:(service: TService) => void) {
+
+    }
+    FindServiceByNumber(aNumber: number, aCb: (service: TService) => void) {
+
     }
     GetServiceList(aCb: (serviceList: TService[]) => void) {
         this.call('GetServiceList', (data) => {
@@ -149,9 +199,38 @@ class CMetaService extends CDBusInterface {
             aCb(serviceList);
         });
     }
-}
+    GetGroupList(aCb: (groupList: TGroupInfo[]) => void) {
 
-var metaSvc = new CMetaService();
-metaSvc.GetServiceList((serviceList: TService[]) => {
-    console.log(serviceList);
-});
+    }
+    Load() {
+
+    }
+    Save() {
+
+    }
+    SetService(aService: TService) {
+
+    }
+    AddService(aService: TService) {
+
+    }
+    RemoveService(aService: TService) {
+
+    }
+    Reset() {
+
+    }
+    LoadPreferredList() {
+
+    }
+    LoadupdatedList() {
+
+    }
+    ChangeUpdateFlag() {
+
+    }
+    RemoveServiceWithFlag() {
+
+    }
+
+}

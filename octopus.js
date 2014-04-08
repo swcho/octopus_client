@@ -93,6 +93,7 @@ var CDBusInterface = (function () {
     };
     return CDBusInterface;
 })();
+exports.CDBusInterface = CDBusInterface;
 
 function convert_service(aDBusData) {
     var ret = {
@@ -121,6 +122,24 @@ var CMetaService = (function (_super) {
     CMetaService.prototype.GetService = function (aUid, aCb) {
         this.call('GetService', aUid, aCb);
     };
+    CMetaService.prototype.GetNetwork = function (aUid, aCb) {
+    };
+    CMetaService.prototype.GetTransponder = function (aUid, aCb) {
+    };
+    CMetaService.prototype.GetProvider = function (aUid, aCb) {
+    };
+    CMetaService.prototype.GetGroup = function (aUid, aCb) {
+    };
+    CMetaService.prototype.GetBouquet = function (aUid, aCb) {
+    };
+    CMetaService.prototype.GetLogoUrl = function (aUid, aBufChannelLogoInfo, aCb) {
+    };
+    CMetaService.prototype.GetServiceTriplet = function (aUid, aTsid, aOnid, aSid, aCb) {
+    };
+    CMetaService.prototype.FindServiceByTriplet = function (aOnId, aTsId, aSvcid, aCb) {
+    };
+    CMetaService.prototype.FindServiceByNumber = function (aNumber, aCb) {
+    };
     CMetaService.prototype.GetServiceList = function (aCb) {
         this.call('GetServiceList', function (data) {
             var serviceList = [];
@@ -130,11 +149,29 @@ var CMetaService = (function (_super) {
             aCb(serviceList);
         });
     };
+    CMetaService.prototype.GetGroupList = function (aCb) {
+    };
+    CMetaService.prototype.Load = function () {
+    };
+    CMetaService.prototype.Save = function () {
+    };
+    CMetaService.prototype.SetService = function (aService) {
+    };
+    CMetaService.prototype.AddService = function (aService) {
+    };
+    CMetaService.prototype.RemoveService = function (aService) {
+    };
+    CMetaService.prototype.Reset = function () {
+    };
+    CMetaService.prototype.LoadPreferredList = function () {
+    };
+    CMetaService.prototype.LoadupdatedList = function () {
+    };
+    CMetaService.prototype.ChangeUpdateFlag = function () {
+    };
+    CMetaService.prototype.RemoveServiceWithFlag = function () {
+    };
     return CMetaService;
 })(CDBusInterface);
-
-var metaSvc = new CMetaService();
-metaSvc.GetServiceList(function (serviceList) {
-    console.log(serviceList);
-});
+exports.CMetaService = CMetaService;
 //# sourceMappingURL=octopus.js.map
