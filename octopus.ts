@@ -141,7 +141,7 @@ function convert_transponder(aDBusData: any): TTransponderInfo {
         netuid: aDBusData[3],
         tsid: aDBusData[4],
         onid: aDBusData[5],
-        tunerid aDBusData[6],
+        tunerid: aDBusData[6],
         deliType: aDBusData[7],
         eDeliType: aDBusData[8]
     };
@@ -198,7 +198,7 @@ export function compare_service(aA: TService, aB: TService): boolean {
 
 export class CDBusInterface {
     private _dbusMsg;
-    private _onResponse: Function;
+    private _onResponseCb: Function;
     constructor(aDestination: string, aPath: string) {
         var dbusMsg = Object.create(dbus.DBusMessage, {
             address: {
@@ -227,8 +227,8 @@ export class CDBusInterface {
             }
         });
         dbusMsg.on ("methodResponse", (data) => {
-            if (this._onResponse) {
-                this._onResponse(data);
+            if (this._onResponseCb) {
+                this._onResponseCb(data);
             }
         });
 
@@ -240,7 +240,7 @@ export class CDBusInterface {
         this._dbusMsg = dbusMsg;
     }
     _onResponse(aCb: (aData: any) => void) {
-        this._onResponse = aCb;
+        this._onResponseCb = aCb;
     }
     _call(aName: string, ...aArgs: any[]) {
         var callback = aArgs.pop();

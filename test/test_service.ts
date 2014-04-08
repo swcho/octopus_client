@@ -10,28 +10,70 @@
 import octopus = require('../octopus');
 var should = require('should');
 
-describe('octopus services', function() {
+describe('CMetaService', function() {
 
     var service: octopus.CMetaService;
     var fitServiceList: octopus.TService[];
+    var fitFirstService: octopus.TService;
     before((done) => {
         service = new octopus.CMetaService();
         console.log('fixture set up');
         service.GetServiceList((serviceList) => {
             fitServiceList = serviceList;
             console.log('count: ' + fitServiceList.length);
+            fitFirstService = fitServiceList[0];
+            console.log(fitFirstService);
             done();
         });
     });
 
-    it('should', (done) => {
-        var s = fitServiceList[0];
-        console.log(s);
-        service.GetService(s.uid, (service: octopus.TService) => {
+    it('GetService', (done) => {
+        service.GetService(fitFirstService.uid, (service: octopus.TService) => {
             console.log(service);
-            should(octopus.compare_service(s, service)).ok;
+            should(octopus.compare_service(fitFirstService, service)).ok;
             done();
         });
     });
 
+    it('GetNetwork', (done) => {
+        service.GetNetwork(fitFirstService.uid, (networkInfo: octopus.TNetworkInfo) => {
+            console.log(networkInfo);
+            done();
+        });
+    });
+
+    it('GetTransponder', (done) => {
+        service.GetTransponder(fitFirstService.uid, (transponderInfo: octopus.TTransponderInfo) => {
+            console.log(transponderInfo);
+            done();
+        });
+    });
+
+    it('GetProvider', (done) => {
+        service.GetProvider(fitFirstService.uid, (providerInfo: TProviderInfo) => {
+            console.log(providerInfo);
+            done();
+        });
+    });
+
+    it('GetGroup', (done) => {
+        service.GetGroup(fitFirstService.uid, (groupInfo: TGroupInfo) => {
+            console.log(groupInfo);
+            done();
+        });
+    });
+
+    it('GetBouquet', (done) => {
+        service.GetBouquet(fitFirstService.uid, (bouquetInfo: TBouquetInfo) => {
+            console.log(bouquetInfo);
+            done();
+        });
+    });
+
+    it('GetLogoUrl', (done) => {
+        service.GetLogoUrl(fitFirstService.uid, (channelLogoInfo: TChannelLogoInfo) => {
+            console.log(channelLogoInfo);
+            done();
+        });
+    });
 });

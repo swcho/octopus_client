@@ -44,6 +44,62 @@ function convert_network(aDBusData) {
     return ret;
 }
 
+function convert_transponder(aDBusData) {
+    var ret = {
+        uid: aDBusData[0],
+        typeOf: aDBusData[1],
+        version: aDBusData[2],
+        netuid: aDBusData[3],
+        tsid: aDBusData[4],
+        onid: aDBusData[5],
+        tunerid: aDBusData[6],
+        deliType: aDBusData[7],
+        eDeliType: aDBusData[8]
+    };
+    return ret;
+}
+
+function convert_provider(aDBusData) {
+    var ret = {
+        uid: aDBusData[0],
+        typeOf: aDBusData[1],
+        version: aDBusData[2],
+        name: aDBusData[3]
+    };
+    return ret;
+}
+
+function convert_group(aDBusData) {
+    var ret = {
+        uid: aDBusData[0],
+        typeOf: aDBusData[1],
+        version: aDBusData[2],
+        id: aDBusData[3],
+        name: aDBusData[4]
+    };
+    return ret;
+}
+
+function convert_bouquet(aDBusData) {
+    var ret = {
+        uid: aDBusData[0],
+        typeOf: aDBusData[1],
+        version: aDBusData[2],
+        id: aDBusData[3],
+        name: aDBusData[4]
+    };
+    return ret;
+}
+
+function convert_logo(aDBusData) {
+    var ret = {
+        svcuid: aDBusData[0],
+        ucServerLogoUrl: aDBusData[1],
+        ucLocalLogoUrl: aDBusData[2]
+    };
+    return ret;
+}
+
 function compare_service(aA, aB) {
     if (aA.uid != aB.uid) {
         return false;
@@ -82,8 +138,8 @@ var CDBusInterface = (function () {
             }
         });
         dbusMsg.on("methodResponse", function (data) {
-            if (_this._onResponse) {
-                _this._onResponse(data);
+            if (_this._onResponseCb) {
+                _this._onResponseCb(data);
             }
         });
 
@@ -94,17 +150,17 @@ var CDBusInterface = (function () {
 
         this._dbusMsg = dbusMsg;
     }
-    CDBusInterface.prototype.onResponse = function (aCb) {
-        this._onResponse = aCb;
+    CDBusInterface.prototype._onResponse = function (aCb) {
+        this._onResponseCb = aCb;
     };
-    CDBusInterface.prototype.call = function (aName) {
+    CDBusInterface.prototype._call = function (aName) {
         var aArgs = [];
         for (var _i = 0; _i < (arguments.length - 1); _i++) {
             aArgs[_i] = arguments[_i + 1];
         }
         var _this = this;
         var callback = aArgs.pop();
-        this.onResponse(callback);
+        this._onResponse(callback);
         this._dbusMsg.clearArgs();
         aArgs.forEach(function (arg) {
             if (typeof arg == 'string') {
@@ -126,21 +182,39 @@ var CMetaService = (function (_super) {
         _super.call(this, 'Octopus.Appkit.Meta.Service', '/Octopus/Appkit/Meta/Service');
     }
     CMetaService.prototype.GetService = function (aUid, aCb) {
-        this.call('GetService', aUid, function (data) {
+        this._call('GetService', aUid, function (data) {
             aCb(convert_service(data));
         });
     };
     CMetaService.prototype.GetNetwork = function (aUid, aCb) {
+        this._call('GetNetwork', aUid, function (data) {
+            aCb(convert_network(data));
+        });
     };
     CMetaService.prototype.GetTransponder = function (aUid, aCb) {
+        this._call('GetTransponder', aUid, function (data) {
+            aCb(convert_transponder(data));
+        });
     };
     CMetaService.prototype.GetProvider = function (aUid, aCb) {
+        this._call('GetProvider', aUid, function (data) {
+            aCb(convert_provider(data));
+        });
     };
     CMetaService.prototype.GetGroup = function (aUid, aCb) {
+        this._call('GetGroup', aUid, function (data) {
+            aCb(convert_group(data));
+        });
     };
     CMetaService.prototype.GetBouquet = function (aUid, aCb) {
+        this._call('GetBouquet', aUid, function (data) {
+            aCb(convert_bouquet(data));
+        });
     };
     CMetaService.prototype.GetLogoUrl = function (aUid, aBufChannelLogoInfo, aCb) {
+        this._call('GetLogoUrl', aUid, function (data) {
+            aCb(convert_logo(data));
+        });
     };
     CMetaService.prototype.GetServiceTriplet = function (aUid, aTsid, aOnid, aSid, aCb) {
     };
@@ -149,7 +223,7 @@ var CMetaService = (function (_super) {
     CMetaService.prototype.FindServiceByNumber = function (aNumber, aCb) {
     };
     CMetaService.prototype.GetServiceList = function (aCb) {
-        this.call('GetServiceList', function (data) {
+        this._call('GetServiceList', function (data) {
             var serviceList = [];
             data.forEach(function (s) {
                 serviceList.push(convert_service(s));
@@ -158,6 +232,13 @@ var CMetaService = (function (_super) {
         });
     };
     CMetaService.prototype.GetGroupList = function (aCb) {
+        this._call('GetGroupList', function (data) {
+            var groupList = [];
+            data.forEach(function (g) {
+                groupList.push(convert_group(g));
+            });
+            aCb(groupList);
+        });
     };
     CMetaService.prototype.Load = function () {
     };
