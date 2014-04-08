@@ -10,7 +10,7 @@ var __extends = this.__extends || function (d, b) {
 /// <reference path="def/node.d.ts" />
 var dbus = require('node-dbus');
 
-var sAddress = 'tcp:host=192.168.0.2,port=55884';
+var sAddress = 'tcp:host=192.168.123.4,port=55884';
 
 
 function convert_service(aDBusData) {
@@ -154,11 +154,11 @@ var CDBusInterface = (function () {
         this._onResponseCb = aCb;
     };
     CDBusInterface.prototype._call = function (aName) {
+        var _this = this;
         var aArgs = [];
         for (var _i = 0; _i < (arguments.length - 1); _i++) {
             aArgs[_i] = arguments[_i + 1];
         }
-        var _this = this;
         var callback = aArgs.pop();
         this._onResponse(callback);
         this._dbusMsg.clearArgs();
@@ -263,4 +263,9 @@ var CMetaService = (function (_super) {
     return CMetaService;
 })(CDBusInterface);
 exports.CMetaService = CMetaService;
+
+function set_config(aConnectionConfig) {
+    sAddress = aConnectionConfig;
+}
+exports.set_config = set_config;
 //# sourceMappingURL=octopus.js.map

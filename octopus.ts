@@ -6,7 +6,7 @@
 
 var dbus = require('node-dbus');
 
-var sAddress = 'tcp:host=192.168.0.2,port=55884'
+var sAddress = 'tcp:host=192.168.123.4,port=55884'
 /*
  reval._1 		=	(int32_t)pstSrc->uid;
  reval._2 		=	(int32_t)pstSrc->tsuid;
@@ -354,4 +354,8 @@ export class CMetaService extends CDBusInterface {
     RemoveServiceWithFlag() {
 
     }
+}
+
+export function set_config(aConnectionConfig: string) {
+    sAddress = aConnectionConfig;
 }
