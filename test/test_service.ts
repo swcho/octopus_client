@@ -50,28 +50,28 @@ describe('CMetaService', function() {
     });
 
     it('GetProvider', (done) => {
-        service.GetProvider(fitFirstService.uid, (providerInfo: TProviderInfo) => {
+        service.GetProvider(fitFirstService.uid, (providerInfo: octopus.TProviderInfo) => {
             console.log(providerInfo);
             done();
         });
     });
 
     it('GetGroup', (done) => {
-        service.GetGroup(fitFirstService.uid, (groupInfo: TGroupInfo) => {
+        service.GetGroup(fitFirstService.uid, (groupInfo: octopus.TGroupInfo) => {
             console.log(groupInfo);
             done();
         });
     });
 
     it('GetBouquet', (done) => {
-        service.GetBouquet(fitFirstService.uid, (bouquetInfo: TBouquetInfo) => {
+        service.GetBouquet(fitFirstService.uid, (bouquetInfo: octopus.TBouquetInfo) => {
             console.log(bouquetInfo);
             done();
         });
     });
 
     it('GetLogoUrl', (done) => {
-        service.GetLogoUrl(fitFirstService.uid, (channelLogoInfo: TChannelLogoInfo) => {
+        service.GetLogoUrl(fitFirstService.uid, null, (channelLogoInfo: octopus.TChannelLogoInfo) => {
             console.log(channelLogoInfo);
             done();
         });

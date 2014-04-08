@@ -3,7 +3,7 @@
     <properties>
       <sourceFilesUrls>
         <item url="file://$PROJECT_DIR$/octopus.js" />
-        <item url="file://$PROJECT_DIR$/test/service/test_service.js" />
+        <item url="file://$PROJECT_DIR$/test/test_service.js" />
       </sourceFilesUrls>
     </properties>
     <CLASSES>
